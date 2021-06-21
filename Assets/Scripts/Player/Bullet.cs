@@ -34,7 +34,7 @@ namespace Player
             }
             else if (other.gameObject.CompareTag(EnemyString) && destroyEnemy)
             {
-                Destroy(other.gameObject);
+                other.gameObject.GetComponent<Enemy.Enemy>().isDestroying = true;
                 Destroy(gameObject);
             }
         }

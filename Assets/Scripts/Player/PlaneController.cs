@@ -23,12 +23,13 @@ namespace Player
         private Vector3 _rollAxis;
 
         private Rigidbody _rigidbody;
-    
-    
+
+        public Transform CameraTarget;
+
+
         void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
-        
             _pitchAxis = inversePitch ? Vector3.left : Vector3.right;
             _rollAxis = inverseRoll ? Vector3.forward : Vector3.back;
         }

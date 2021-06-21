@@ -5,42 +5,40 @@ using Player;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
+using Zenject;
 
 public class Mark : MonoBehaviour
 {
 
     public float paddingPercent;
     
-    public Transform relatedEnemy;
+    public Transform relatedEnemyTransform;
+
+    public Enemy.Enemy relatedEnemy;
 
     private Transform _player;
 
     private Camera _camera;
 
-    private GameObject _distance;
+    public GameObject distance;
 
-    private GameObject _icon;
+    public GameObject icon;
 
     private Text _distanceText;
 
     private const string PlayerTag = "Player";
     // Start is called before the first frame update
+    
+    [Inject]
+    private void Construct(PlaneController player, Camera camera)
+    {
+        _player = player.transform;
+        _camera = camera;
+    }
+    
     void Start()
     {
-        if (GameObject.FindGameObjectWithTag(PlayerTag) != null)
-            _player = GameObject.FindGameObjectWithTag(PlayerTag).transform;
-        else Debug.LogErrorFormat("There is no GameObject with {0} tag!", PlayerTag);
-
-        _player = FindObjectOfType<PlaneController>().transform;
-        
-        if (Camera.main != null)
-            _camera = Camera.main;
-        else Debug.LogError("There is no Camera with MainCamera tag!");
-
-        _distance = transform.GetChild(0).gameObject;
-        _icon = transform.GetChild(1).gameObject;
-
-        _distanceText = _distance.GetComponent<Text>();
+        _distanceText = distance.GetComponent<Text>();
     }
 
     private float Padding()
@@ -50,22 +48,22 @@ public class Mark : MonoBehaviour
     
     void Update()
     {
-        if (!relatedEnemy) Destroy(gameObject);
-        
-        var newPosition = _camera.WorldToViewportPoint(relatedEnemy.position);
+        if (relatedEnemy.isDestroying) Destroy(gameObject);
+
+        var newPosition = _camera.WorldToViewportPoint(relatedEnemyTransform.position);
 
         if (newPosition.x > 0f + Padding() && newPosition.x < 1f - Padding() && newPosition.y > 0f + Padding() && newPosition.y < 1f - Padding() && newPosition.z >= 0f)
         {
-            _distance.SetActive(true);
-            _icon.SetActive(false);
-            _distanceText.text = ((int)Vector3.Distance(relatedEnemy.position, _player.position)).ToString();
+            distance.SetActive(true);
+            icon.SetActive(false);
+            _distanceText.text = ((int)Vector3.Distance(relatedEnemyTransform.position, _player.position)).ToString();
         }
         else
         {
             newPosition = ToScreenBorder(newPosition);
 
-            _distance.SetActive(false);
-            _icon.SetActive(true);
+            distance.SetActive(false);
+            icon.SetActive(true);
         }
 
         newPosition.z = _camera.nearClipPlane;

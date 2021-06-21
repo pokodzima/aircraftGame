@@ -1,6 +1,8 @@
 ﻿using System;
 using Player;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace Enemy
@@ -39,18 +41,20 @@ namespace Enemy
 
         private Transform _player;
 
+        public bool isDestroying;
+
+
+        [Inject]
+        private void Construct(PlaneController player)
+        {
+            _player = player.transform;
+        }
+
 
         void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
-
-            var mark = Instantiate(markPrefab, FindObjectOfType<Canvas>().transform);
-            mark.GetComponent<Mark>().relatedEnemy = transform;
-
-            _player = FindObjectOfType<PlaneController>().transform;
-
             _gunController = GetComponent<GunController>();
-            
             GenerateNewTarget();
         }
 
@@ -85,6 +89,11 @@ namespace Enemy
 
         }
 
+        private void Update()
+        {
+            if (isDestroying) Destroy(gameObject);
+        }
+
 
         private void GenerateNewTarget()
         {
@@ -101,6 +110,5 @@ namespace Enemy
                 _targetRotation = Quaternion.LookRotation(_target - transform.position);
             }
         }
-        
     }
 }
