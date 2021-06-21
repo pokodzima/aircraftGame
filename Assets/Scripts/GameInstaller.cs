@@ -5,10 +5,11 @@ using Zenject;
 
 public class GameInstaller : MonoInstaller, IInitializable
 {
-    public GameObject Player;
-    public GameObject Camera;
+    public GameObject player;
+    public GameObject cameraGameObject;
     public Canvas canvas;
-    public EnemyMarker[] EnemyMarkers;
+    public EnemyMarker[] enemyMarkers;
+
     public override void InstallBindings()
     {
         BindInstallerInterfaces();
@@ -35,23 +36,23 @@ public class GameInstaller : MonoInstaller, IInitializable
 
     private void BindPlaneController()
     {
-        PlaneController planeController = Container.InstantiatePrefabForComponent<PlaneController>(Player);
-        
+        PlaneController planeController = Container.InstantiatePrefabForComponent<PlaneController>(player);
+
         Container.Bind<PlaneController>().FromInstance(planeController).AsSingle();
     }
 
     private void BindCamera()
     {
-        Camera camera = Container.InstantiatePrefabForComponent<Camera>(Camera);
+        Camera cameraComponent = Container.InstantiatePrefabForComponent<Camera>(cameraGameObject);
 
-        Container.Bind<Camera>().FromInstance(camera).AsSingle();
+        Container.Bind<Camera>().FromInstance(cameraComponent).AsSingle();
     }
 
     public void Initialize()
     {
         var enemyFactory = Container.Resolve<IEnemyFactory>();
         enemyFactory.Load();
-        foreach (EnemyMarker marker in EnemyMarkers)
+        foreach (EnemyMarker marker in enemyMarkers)
         {
             enemyFactory.Create(marker.transform.position);
         }

@@ -224,10 +224,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c276c3d6341ac25459faa84394b95e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 6464328236521588445, guid: 0cd87c24b4668014ab4120e57f4e47fe, type: 3}
-  Camera: {fileID: 3758751970791072696, guid: 637c1b85f821a1a41b27aa06d5d38381, type: 3}
+  player: {fileID: 6464328236521588445, guid: 0cd87c24b4668014ab4120e57f4e47fe, type: 3}
+  cameraGameObject: {fileID: 3758751970791072696, guid: 637c1b85f821a1a41b27aa06d5d38381,
+    type: 3}
   canvas: {fileID: 925760901}
-  EnemyMarkers:
+  enemyMarkers:
   - {fileID: 707529941}
   - {fileID: 1954731185}
   - {fileID: 93675161}
